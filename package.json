@@ -1,0 +1,49 @@
+{
+  "name": "cortana-meeting-skill",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cortana skill to set up meeting",
+  "main": "app.js",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "botbuilder": "^3.13.1",
+    "botbuilder-azure": "^3.0.4",
+    "restify": "^5.0.0"
+  },
+  "devDependencies": {
+    "request": "^2.81.0",
+    "zip-folder": "^1.0.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^6.1.0",
+    "prettier": "^1.10.2"
+  },
+  "lint-staged": {
+    "app.js": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 4,
+    "semi": true
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "azure-publish": "node publish.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ruiyangio/cortana-meeting-skill.git"
+  },
+  "keywords": [
+    "cortana"
+  ],
+  "author": "Rui Yang <ruiyangwind@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ruiyangio/cortana-meeting-skill/issues"
+  },
+  "homepage": "https://github.com/ruiyangio/cortana-meeting-skill#readme"
+}
