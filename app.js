@@ -89,8 +89,19 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         session.say('I found free times', mockUpData.freeTimes);
     })
     .matches('Confirm.Positive', (session, args, next) => {
-        session.say('Meeting confirmed', 'Meeting is scheduled');
-        conversationStateService.removeConversationState();
+        if (!conversationStateService.validateMeetingInformation()) {
+            session.say('How can I help you?', 'How can I help you?');
+        } else {
+            session.say('Meeting confirmed', 'Meeting is scheduled');
+            conversationStateService.removeConversationState();
+        }
+    })
+    .matches('Confirm.Negative', (session, args, next) => {
+        if (!conversationStateService.validateMeetingInformation()) {
+            session.say('How can I help you?', 'How can I help you?');
+        } else {
+            session.say('How can I help you?', 'How can I help you?');
+        }
     })
     .onDefault((session, args, next) => {
         console.log(session.message);

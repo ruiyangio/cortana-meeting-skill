@@ -26,6 +26,22 @@ function getValidEntityTypes(entityType) {
     return typeToDataField[entityType];
 }
 
+function validateMeetingInformation() {
+    if (!conversationState) {
+        return false;
+    }
+
+    const requiredFields = {
+        'person': true,
+        'location': true,
+        'date': true,
+        'duration': true,
+        'subject': true
+    };
+
+    return Object.keys(conversationState).every(stateName => requiredFields[stateName]);
+}
+
 function backFillconversationState(entities) {
     let conversationState = getconversationState() || {};
     entities.forEach(entity => {
@@ -45,5 +61,6 @@ module.exports = {
     getconversationState: getconversationState,
     removeConversationState: removeConversationState,
     getValidEntityTypes: getValidEntityTypes,
-    backFillconversationState: backFillconversationState
+    backFillconversationState: backFillconversationState,
+    validateMeetingInformation: validateMeetingInformation
 }
