@@ -1,7 +1,3 @@
-/*-----------------------------------------------------------------------------
-A simple echo bot for the Microsoft Bot Framework. 
------------------------------------------------------------------------------*/
-
 const restify = require('restify');
 const builder = require('botbuilder');
 const botbuilder_azure = require('botbuilder-azure');
@@ -56,89 +52,15 @@ const LuisModelUrl =
     luisAppId +
     '&subscription-key=' +
     luisAPIKey;
-const cortanaTokener = axios({
-    method: 'post',
-    url: 'http://game.westus.cloudapp.azure.com/api/login',
-    data: {
-        userName: 'cortana_skill'
-    }
-}).then(response => {
-    return response.data.token;
-});
 
 // Main dialog with LUIS
 const recognizer = new builder.LuisRecognizer(LuisModelUrl);
 const intents = new builder.IntentDialog({ recognizers: [recognizer] })
-    .matches('Greeting', session => {
-        session.send(
-            "You reached Greeting intent, you said '%s'.",
-            session.message.text
-        );
+    .matches('Meeting.Add', (session, args) => {
+        session.say(JSON.stringify(args), 'I found the entities');
     })
-    .matches('Help', session => {
-        session.send(
-            "You reached Help intent, you said '%s'.",
-            session.message.text
-        );
-    })
-    .matches('Cancel', session => {
-        const messageText = session.message.text;
-
-        if (messageText.includes('get game')) {
-            cortanaTokener.then(token => {
-                axios({
-                    method: 'get',
-                    url: 'http://game.westus.cloudapp.azure.com/api/games',
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }).then(response => {
-                    session.send(JSON.stringify(response.data));
-                });
-            });
-        } else if (messageText.includes('clean games')) {
-            cortanaTokener.then(token => {
-                axios({
-                    method: 'PUT',
-                    url:
-                        'http://game.westus.cloudapp.azure.com/admin/cleangames',
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                    data: {
-                        cred: 'ray'
-                    }
-                }).then(response => {
-                    session.send('Games are cleaned');
-                });
-            });
-        } else if (messageText.includes('clean users')) {
-            cortanaTokener.then(token => {
-                axios({
-                    method: 'PUT',
-                    url:
-                        'http://game.westus.cloudapp.azure.com/admin/cleanusers',
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                    data: {
-                        cred: 'ray'
-                    }
-                }).then(response => {
-                    session.send('Users are cleaned');
-                });
-            });
-        } else {
-            session.send(
-                "You reached Cancel intent, you said '%s'.",
-                session.message.text
-            );
-        }
-    })
-    /*
-.matches('<yourIntent>')... See details at http://docs.botframework.com/builder/node/guides/understanding-natural-language/
-*/
-    .onDefault(session => {
+    .onDefault((session, args) => {
+        console.log(session.message);
         session.send("Sorry, I did not understand '%s'.", session.message.text);
     });
 
