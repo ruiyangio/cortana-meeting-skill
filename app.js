@@ -2,6 +2,7 @@ const restify = require('restify');
 const builder = require('botbuilder');
 const botbuilder_azure = require('botbuilder-azure');
 const axios = require('axios');
+const conversationStateService = require('./bot/services/conversation-data-service');
 
 // Setup Restify Server
 const server = restify.createServer();
@@ -45,21 +46,53 @@ const luisAPIKey = process.env.LuisAPIKey;
 const luisAPIHostName =
     process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
 
-const LuisModelUrl =
-    'https://' +
-    luisAPIHostName +
-    '/luis/v1/application?id=' +
-    luisAppId +
-    '&subscription-key=' +
-    luisAPIKey;
+const LuisModelUrl = `https://${luisAPIHostName}/luis/v1/application?id=${luisAppId}&subscription-key=${luisAPIKey}`;
+
+const mockUpData = {
+    freeTimes: 'You have free times today from 3:00pm to 4:00pm'
+};
 
 // Main dialog with LUIS
 const recognizer = new builder.LuisRecognizer(LuisModelUrl);
 const intents = new builder.IntentDialog({ recognizers: [recognizer] })
-    .matches('Meeting.Add', (session, args) => {
-        session.say(JSON.stringify(args), 'I found the entities');
+    .matches('Meeting.Add', (session, args, next) => {
+        conversationStateService.backFillconversationState(args.entities);
+
+        const conversationState = conversationStateService.getconversationState();
+
+        if (!conversationState.subject) {
+            session.say(
+                "What's the subject of this meeting?",
+                `What would you like to disucss with ${
+                    conversationState.person
+                }`
+            );
+        } else {
+            session.say(
+                `${conversationState.person} has free time`,
+                'Would you like to schedule this meeting?'
+            );
+        }
     })
-    .onDefault((session, args) => {
+    .matches('Meeting.Subject', (session, args, next) => {
+        conversationStateService.backFillconversationState(args.entities);
+        const conversationState = conversationStateService.getconversationState();
+
+        if (conversationState) {
+            session.say(
+                `${conversationState.person} has free time`,
+                'Would you like to schedule this meeting?'
+            );
+        }
+    })
+    .matches('Calendar.Availability', (session, args, next) => {
+        session.say('I found free times', mockUpData.freeTimes);
+    })
+    .matches('Confirm.Positive', (session, args, next) => {
+        session.say('Meeting confirmed', 'Meeting is scheduled');
+        conversationStateService.removeConversationState();
+    })
+    .onDefault((session, args, next) => {
         console.log(session.message);
         session.send("Sorry, I did not understand '%s'.", session.message.text);
     });
