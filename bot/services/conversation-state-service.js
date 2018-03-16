@@ -56,8 +56,8 @@ function askMissingData(session) {
 
     if (!meetingState.subject) {
         session.say(
-            'What is subject of meeting?',
-            'What is subject of the meeting?'
+            'What is the subject of this meeting?',
+            'What is the subject of this meeting?'
         );
     } else if (!meetingState.duration) {
         session.say('How long is the meeting?', 'How long is the meeting?');
