@@ -15,12 +15,13 @@ const requiredFields = {
 };
 
 function getMeetingState(session, entities) {
-    if (!session.userData.meetingSate) {
-        session.userData.meetingSate = {};
+    if (!session.privateConversationData.meetingSate) {
+        session.privateConversationData.meetingSate = {};
     }
 
-    const meetingState = session.userData.meetingSate;
+    const meetingState = session.privateConversationData.meetingSate;
     fillMeetingState(meetingState, entities);
+    session.privateConversationData.meetingSate = meetingState;
     return meetingState;
 }
 
@@ -30,7 +31,7 @@ function fillMeetingState(meetingState, entities) {
     }
 
     entities.forEach(entity => {
-        const dataFieldName = entityTypeToFieldName[entity];
+        const dataFieldName = entityTypeToFieldName[entity.type];
         if (!dataFieldName) {
             return;
         }
@@ -47,7 +48,7 @@ function isMeetingValid(meetingState) {
 }
 
 function removeMeetingState(session) {
-    delete session.userData.meetingState;
+    delete session.privateConversationData.meetingState;
 }
 
 module.exports = {
