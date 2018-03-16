@@ -81,10 +81,17 @@ function askMissingData(session) {
     }
 }
 
+function handleMissingDataQuery(session, args, next) {
+    const meetingState = getMeetingState(session, args.entities);
+
+    askMissingData(session);
+}
+
 module.exports = {
     getMeetingState: getMeetingState,
     fillMeetingState: fillMeetingState,
     isMeetingValid: isMeetingValid,
     removeMeetingState: removeMeetingState,
-    askMissingData: askMissingData
+    askMissingData: askMissingData,
+    handleMissingDataQuery: handleMissingDataQuery
 };

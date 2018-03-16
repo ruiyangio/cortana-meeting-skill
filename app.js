@@ -55,22 +55,18 @@ const mockUpData = {
 // Main dialog with LUIS
 const recognizer = new builder.LuisRecognizer(LuisModelUrl);
 const intents = new builder.IntentDialog({ recognizers: [recognizer] })
-    .matches('Meeting.Add', (session, args, next) => {
-        const meetingState = conversationStateService.getMeetingState(
-            session,
-            args.entities
-        );
-
-        conversationStateService.askMissingData(session);
-    })
-    .matches('Meeting.Subject', (session, args, next) => {
-        const meetingState = conversationStateService.getMeetingState(
-            session,
-            args.entities
-        );
-
-        conversationStateService.askMissingData(session);
-    })
+    .matches('Meeting.Add', conversationStateService.handleMissingDataQuery)
+    .matches('Meeting.Subject', conversationStateService.handleMissingDataQuery)
+    .matches('Meeting.Person', conversationStateService.handleMissingDataQuery)
+    .matches(
+        'Meeting.Duration',
+        conversationStateService.handleMissingDataQuery
+    )
+    .matches(
+        'Meeting.Location',
+        conversationStateService.handleMissingDataQuery
+    )
+    .matches('Meeting.Date', conversationStateService.handleMissingDataQuery)
     .matches('Calendar.Availability', (session, args, next) => {
         session.say('I found free times', mockUpData.freeTimes);
     })
@@ -83,8 +79,9 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         if (!conversationStateService.isMeetingValid(meetingState)) {
             session.say('How can I help you?', 'How can I help you?');
         } else {
-            session.say('Meeting confirmed', 'Meeting is scheduled');
             conversationStateService.removeMeetingState();
+            session.say('Meeting confirmed', 'Meeting is scheduled');
+            session.endConversation('Meeting confirmed');
         }
     })
     .matches('Confirm.Negative', (session, args, next) => {
