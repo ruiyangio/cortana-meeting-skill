@@ -2,7 +2,7 @@ const restify = require('restify');
 const builder = require('botbuilder');
 const botbuilder_azure = require('botbuilder-azure');
 const axios = require('axios');
-const conversationStateService = require('./bot/services/conversation-data-service');
+const conversationStateService = require('./bot/services/conversation-state-service');
 
 // Setup Restify Server
 const server = restify.createServer();
@@ -56,31 +56,32 @@ const mockUpData = {
 const recognizer = new builder.LuisRecognizer(LuisModelUrl);
 const intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .matches('Meeting.Add', (session, args, next) => {
-        conversationStateService.backFillconversationState(args.entities);
+        const meetingState = conversationStateService.getMeetingState(
+            session,
+            args.entities
+        );
 
-        const conversationState = conversationStateService.getconversationState();
-
-        if (!conversationState.subject) {
+        if (!meetingState.subject) {
             session.say(
                 "What's the subject of this meeting?",
-                `What would you like to disucss with ${
-                    conversationState.person
-                }`
+                `What would you like to disucss with ${meetingState.person}`
             );
         } else {
             session.say(
-                `${conversationState.person} has free time`,
+                `${meetingState.person} has free time`,
                 'Would you like to schedule this meeting?'
             );
         }
     })
     .matches('Meeting.Subject', (session, args, next) => {
-        conversationStateService.backFillconversationState(args.entities);
-        const conversationState = conversationStateService.getconversationState();
+        const meetingState = conversationStateService.getMeetingState(
+            session,
+            args.entities
+        );
 
-        if (conversationState) {
+        if (!meetingState.subject) {
             session.say(
-                `${conversationState.person} has free time`,
+                `${meetingState.person} has free time`,
                 'Would you like to schedule this meeting?'
             );
         }
@@ -89,22 +90,34 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         session.say('I found free times', mockUpData.freeTimes);
     })
     .matches('Confirm.Positive', (session, args, next) => {
-        if (!conversationStateService.validateMeetingInformation()) {
+        const meetingState = conversationStateService.getMeetingState(
+            session,
+            args.entities
+        );
+
+        if (!meetingState.isValid()) {
             session.say('How can I help you?', 'How can I help you?');
         } else {
             session.say('Meeting confirmed', 'Meeting is scheduled');
-            conversationStateService.removeConversationState();
+            meetingStateService.removemeetingState();
         }
     })
     .matches('Confirm.Negative', (session, args, next) => {
-        if (!conversationStateService.validateMeetingInformation()) {
+        const meetingState = conversationStateService.getMeetingState(
+            session,
+            args.entities
+        );
+
+        if (!meetingState.isValid()) {
             session.say('How can I help you?', 'How can I help you?');
         } else {
             session.say('How can I help you?', 'How can I help you?');
         }
     })
+    .matches('EndSkill', (session, args, next) => {
+        session.endConversation();
+    })
     .onDefault((session, args, next) => {
-        console.log(session.message);
         session.send("Sorry, I did not understand '%s'.", session.message.text);
     });
 

@@ -21,6 +21,10 @@
     "app.js": [
       "prettier --single-quote --write",
       "git add"
+    ],
+    "bot/**/*.js": [
+      "prettier --single-quote --write",
+      "git add"
     ]
   },
   "prettier": {
