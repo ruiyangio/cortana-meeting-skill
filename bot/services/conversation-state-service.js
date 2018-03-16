@@ -1,13 +1,49 @@
-const MeetingState = require('../models/MeetingState');
+const entityTypeToFieldName = {
+    person: 'person',
+    location: 'location',
+    'builtin.datetimeV2.date': 'date',
+    'builtin.datetimeV2.duration': 'duration',
+    'builtin.datetimeV2.daterange': 'daterange',
+    'meeting.subject': 'subject'
+};
 
-function getOrCreateMeetingState(session, entities) {
+const requiredFields = {
+    person: true,
+    location: true,
+    date: true,
+    subject: true
+};
+
+function getMeetingState(session, entities) {
     if (!session.userData.meetingSate) {
-        session.userData.meetingSate = new MeetingState();
+        session.userData.meetingSate = {};
     }
 
     const meetingState = session.userData.meetingSate;
-    meetingState.fillState(entities);
+    fillMeetingState(meetingState, entities);
     return meetingState;
+}
+
+function fillMeetingState(meetingState, entities) {
+    if (!Array.isArray(entities)) {
+        return;
+    }
+
+    entities.forEach(entity => {
+        const dataFieldName = entityTypeToFieldName[entity];
+        if (!dataFieldName) {
+            return;
+        }
+
+        meetingState[dataFieldName] =
+            meetingState[dataFieldName] || entity.entity;
+    });
+}
+
+function isMeetingValid(meetingState) {
+    return Object.keys(requiredFields).every(
+        fieldName => !!meetingState[fieldName]
+    );
 }
 
 function removeMeetingState(session) {
@@ -16,5 +52,7 @@ function removeMeetingState(session) {
 
 module.exports = {
     getMeetingState: getMeetingState,
+    fillMeetingState: fillMeetingState,
+    isMeetingValid: isMeetingValid,
     removeMeetingState: removeMeetingState
 };

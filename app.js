@@ -95,7 +95,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
             args.entities
         );
 
-        if (!meetingState.isValid()) {
+        if (!conversationStateService.isMeetingValid(meetingState)) {
             session.say('How can I help you?', 'How can I help you?');
         } else {
             session.say('Meeting confirmed', 'Meeting is scheduled');
@@ -108,7 +108,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
             args.entities
         );
 
-        if (!meetingState.isValid()) {
+        if (!conversationStateService.isMeetingValid(meetingState)) {
             session.say('How can I help you?', 'How can I help you?');
         } else {
             session.say('How can I help you?', 'How can I help you?');
