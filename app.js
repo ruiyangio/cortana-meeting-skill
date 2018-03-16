@@ -61,17 +61,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
             args.entities
         );
 
-        if (!meetingState.subject) {
-            session.say(
-                "What's the subject of this meeting?",
-                `What would you like to disucss with ${meetingState.person}`
-            );
-        } else {
-            session.say(
-                `${meetingState.person} has free time`,
-                'Would you like to schedule this meeting?'
-            );
-        }
+        conversationStateService.askMissingData(session);
     })
     .matches('Meeting.Subject', (session, args, next) => {
         const meetingState = conversationStateService.getMeetingState(
@@ -79,12 +69,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
             args.entities
         );
 
-        if (meetingState.subject) {
-            session.say(
-                `${meetingState.person} has free time`,
-                'Would you like to schedule this meeting?'
-            );
-        }
+        conversationStateService.askMissingData(session);
     })
     .matches('Calendar.Availability', (session, args, next) => {
         session.say('I found free times', mockUpData.freeTimes);
@@ -99,7 +84,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
             session.say('How can I help you?', 'How can I help you?');
         } else {
             session.say('Meeting confirmed', 'Meeting is scheduled');
-            conversationStateService.removemeetingState();
+            conversationStateService.removeMeetingState();
         }
     })
     .matches('Confirm.Negative', (session, args, next) => {
