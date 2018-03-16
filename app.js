@@ -79,7 +79,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
             args.entities
         );
 
-        if (!meetingState.subject) {
+        if (meetingState.subject) {
             session.say(
                 `${meetingState.person} has free time`,
                 'Would you like to schedule this meeting?'
@@ -99,7 +99,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
             session.say('How can I help you?', 'How can I help you?');
         } else {
             session.say('Meeting confirmed', 'Meeting is scheduled');
-            meetingStateService.removemeetingState();
+            conversationStateService.removemeetingState();
         }
     })
     .matches('Confirm.Negative', (session, args, next) => {
