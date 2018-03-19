@@ -1,7 +1,6 @@
 const restify = require('restify');
 const builder = require('botbuilder');
 const botbuilder_azure = require('botbuilder-azure');
-const axios = require('axios');
 const conversationStateService = require('./bot/services/conversation-state-service');
 
 // Setup Restify Server
@@ -79,9 +78,9 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         if (!conversationStateService.isMeetingValid(meetingState)) {
             session.say('How can I help you?', 'How can I help you?');
         } else {
-            conversationStateService.removeMeetingState();
-            session.say('Meeting confirmed', 'Meeting is scheduled');
-            session.endConversation('Meeting confirmed');
+            session
+                .say('Meeting confirmed', 'Meeting is scheduled')
+                .endConversation('Meeting confirmed');
         }
     })
     .matches('Confirm.Negative', (session, args, next) => {
