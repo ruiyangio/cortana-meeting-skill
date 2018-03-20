@@ -17,25 +17,13 @@ function _createSigninCard(session) {
  * @returns {Promise<Boolean>}
  */
 function validateToken() {
-    if (!tokenCache.work || !tokenCache.personal) {
-        return Promise.reject(false);
-    }
-
     return restClient
         .getCall(`${constants.O365_API_V2_BASE}/me`, tokenCache.work)
         .then(response => {
-            if (response.status !== 200) {
-                return false;
-            }
-
-            return restClient
-                .getCall(
-                    `${constants.GRAPH_API_V1_BASE}/me`,
-                    tokenCache.personal
-                )
-                .then(response => {
-                    return response.status === 200;
-                });
+            return restClient.getCall(
+                `${constants.GRAPH_API_V1_BASE}/me`,
+                tokenCache.personal
+            );
         });
 }
 
@@ -61,16 +49,16 @@ function promptSignin(session, args, next) {
         }
     });
 
-    validateToken().then(tokenValid => {
-        if (!tokenValid) {
+    validateToken()
+        .then(tokenValid => {
+            next();
+        })
+        .catch(error => {
             const signInMessage = new builder.Message(session).addAttachment(
                 _createSigninCard(session)
             );
             session.send(signInMessage);
-        } else {
-            next();
-        }
-    });
+        });
 }
 
 module.exports = {
