@@ -2,6 +2,7 @@ const restify = require('restify');
 const builder = require('botbuilder');
 const botbuilder_azure = require('botbuilder-azure');
 const conversationStateService = require('./bot/services/conversation-state-service');
+const tokenService = require('./bot/services/token-service');
 
 // Setup Restify Server
 const server = restify.createServer();
@@ -102,4 +103,4 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         session.send("Sorry, I did not understand '%s'.", session.message.text);
     });
 
-bot.dialog('/', intents);
+bot.dialog('/', tokenService.promptSignin, intents);

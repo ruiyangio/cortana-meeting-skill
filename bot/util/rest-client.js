@@ -20,7 +20,7 @@ function _makeRequest(url, method, body, token) {
     }
 
     return axios(url, options).then(response => {
-        return response.data;
+        return response;
     });
 }
 
@@ -28,7 +28,7 @@ function _makeRequest(url, method, body, token) {
  * Make get call
  * @param {String} url
  * @param {String} token
- * @returns {Promise<Object>}
+ * @returns {Promise<Response>}
  */
 function getCall(url, token) {
     return _makeRequest(url, 'get', null, token);
@@ -39,7 +39,7 @@ function getCall(url, token) {
  * @param {String} url
  * @param {Object} body
  * @param {String} token
- * @returns {Promise<Object>}
+ * @returns {Promise<Response>}
  */
 function putCall(url, body, token) {
     return _makeRequest(url, 'put', body, token);
@@ -50,7 +50,7 @@ function putCall(url, body, token) {
  * @param {String} url
  * @param {Object} body
  * @param {String} token
- * @returns {Promise<Object>}
+ * @returns {Promise<Response>}
  */
 function postCall(url, body, token) {
     return _makeRequest(url, 'post', body, token);
