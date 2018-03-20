@@ -18,7 +18,7 @@ function _createSigninCard(session) {
  */
 function validateToken() {
     if (!tokenCache.work || !tokenCache.personal) {
-        return new Promise.reject();
+        return Promise.reject(false);
     }
 
     return restClient

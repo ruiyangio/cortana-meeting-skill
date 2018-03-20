@@ -1,63 +1,69 @@
 const constants = require('../constants');
-const axios = require('axios');
+const jwt = require('jsonwebtoken');
+const restClient = require('../util/rest-client');
+const builder = require('botbuilder');
 
-function _makeRequest(url, method, body, token) {
-    let options = {
-        url: url,
-        method: method,
-        headers: {}
-    };
+let tokenCache = {
+    work: '',
+    personal: ''
+};
 
-    if (token) {
-        options.headers[constants.AUTH_HEADER_NAME] = `${
-            constants.BEARER
-        } ${token}`;
+function _createSigninCard(session) {
+    return new builder.SigninCard(session)
+        .text('Sign in')
+        .button('Sign-in', 'https://login.microsoftonline.com');
+}
+
+/**
+ * @returns {Promise<Boolean>}
+ */
+function validateToken() {
+    return restClient
+        .getCall(`${constants.O365_API_V2_BASE}/me`, tokenCache.work)
+        .then(response => {
+            return restClient.getCall(
+                `${constants.GRAPH_API_V1_BASE}/me`,
+                tokenCache.personal
+            );
+        });
+}
+
+function getTokens() {
+    return tokenCache;
+}
+
+function getTokenType(token) {
+    const decoded = jwt.decode(token);
+    if (!decoded || !decoded.upn) {
+        return 'personal';
+    } else if (decoded.upn.includes(constants.TEST_TENENT)) {
+        return 'work';
     }
 
-    if (body) {
-        options.headers['Content-Type'] = constants.JSON_HEADER;
-        options.data = body;
-    }
+    return 'personal';
+}
 
-    return axios(url, options).then(response => {
-        return response;
+function promptSignin(session, args, next) {
+    session.message.entities.forEach(entity => {
+        if (entity.type === constants.AUTH_ENTITY_TYPE) {
+            tokenCache[getTokenType(entity.token)] = entity.token;
+        }
     });
-}
 
-/**
- * Make get call
- * @param {String} url
- * @param {String} token
- * @returns {Promise<Response>}
- */
-function getCall(url, token) {
-    return _makeRequest(url, 'get', null, token);
-}
-
-/**
- * Make put call
- * @param {String} url
- * @param {Object} body
- * @param {String} token
- * @returns {Promise<Response>}
- */
-function putCall(url, body, token) {
-    return _makeRequest(url, 'put', body, token);
-}
-
-/**
- * Make post call
- * @param {String} url
- * @param {Object} body
- * @param {String} token
- * @returns {Promise<Response>}
- */
-function postCall(url, body, token) {
-    return _makeRequest(url, 'post', body, token);
+    validateToken()
+        .then(tokenValid => {
+            next();
+        })
+        .catch(error => {
+            const signInMessage = new builder.Message(session).addAttachment(
+                _createSigninCard(session)
+            );
+            session.send(signInMessage);
+        });
 }
 
 module.exports = {
-    getCall: getCall,
-    putCall: putCall,
-    postCall: postCall
+    validateToken: validateToken,
+    promptSignin: promptSignin,
+    getTokens: getTokens
 };
