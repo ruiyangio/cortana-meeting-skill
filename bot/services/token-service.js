@@ -1,3 +1,4 @@
+const builder = require('botbuilder');
 const constants = require('../constants');
 const jwt = require('jsonwebtoken');
 const restClient = require('../util/rest-client');
@@ -21,7 +22,7 @@ function validateToken() {
         .getCall(`${constants.O365_API_V2_BASE}/me`, tokenCache.work)
         .then(response => {
             return restClient.getCall(
-                `${constants.GRAPH_API_V1_BASE}/me`,
+                `${constants.GRAPH_API_V1_BASE}/me/calendars`,
                 tokenCache.personal
             );
         });
