@@ -1,9 +1,9 @@
-let USERS = {
+const USERS = {
     RUI: 'rui',
     MIKE: 'mike'
 };
 
-let USER_ACCOUNTS = {
+const USER_ACCOUNTS = {
     rui: {
         WORK_EMAIL_ID: 'ryang@mengdongy.onmicrosoft.com',
         PERSONAL_EMAIL_ID: 'rui.yang.personal1@hotmail.com',
@@ -24,13 +24,13 @@ let USER_ACCOUNTS = {
     }
 };
 
-let URLS = {
+const URLS = {
     FIND_MEETING_TIME:
         'https://outlook.office.com/api/v2.0/me/findmeetingtimes',
     BASE_GET_CALENDAR_VIEW: 'https://outlook.office.com/api/v2.0/me/calendars/'
 };
 
-let MAILBOX = {
+const MAILBOX = {
     PERSONAL: 'personal',
     WORK: 'work'
 };
@@ -46,5 +46,5 @@ module.exports = {
     USERS: USERS,
     USER_ACCOUNTS: USER_ACCOUNTS,
     URLS: URLS,
-    MAILBOX: MAILBOX,
+    MAILBOX: MAILBOX
 };
