@@ -1,8 +1,10 @@
+const constants = require('./bot/constants');
 const restify = require('restify');
 const builder = require('botbuilder');
 const botbuilder_azure = require('botbuilder-azure');
 const conversationStateService = require('./bot/services/conversation-state-service');
 const tokenService = require('./bot/services/token-service');
+const persona = require('./bot/services/persona-controller');
 
 // Setup Restify Server
 const server = restify.createServer();
@@ -73,7 +75,11 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .matches('Calendar.Availability', [
         tokenService.promptSignin,
         (session, args, next) => {
-            session.say('I found free times', mockUpData.freeTimes);
+            persona
+                .getPersonalAvailability(constants.USERS.RUI, new Date())
+                .then(res => {
+                    session.send(JSON.stringify(res));
+                });
         }
     ])
     .matches('Confirm.Positive', (session, args, next) => {
