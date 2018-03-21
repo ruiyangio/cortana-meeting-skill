@@ -1,10 +1,10 @@
-const availableSlotService = require('./available-slot-service.js');
-const constants = require('../constants.js');
-const authority = require('../authority.js');
+const availableSlotService = require('./available-slot-service');
+const constants = require('../constants');
+const tokenService = require('./token-service');
 
+const tokenCache = tokenService.getTokens();
 const USERS = constants.USERS;
 const USER_ACCOUNTS = constants.USER_ACCOUNTS;
-var _pesona_callback_counter = 0;
 
 /**
  * Gets the first avaiable time for an user based on the start date time provided.
@@ -106,7 +106,7 @@ function _getAvailableTimeForWorkEvent(
 ) {
     return availableSlotService
         .findMeetingTimes(
-            authority.workToken,
+            tokenCache.work,
             attendees,
             startDateTime,
             endDateTime
@@ -162,11 +162,11 @@ function _getAvailableTimeForPersonalEvent(
         attendeeCalAssciation[attendeeIdx]['mailbox'] == constants.MAILBOX.WORK
     ) {
         // looking at the work account.
-        token = authority.workToken;
+        token = tokenCache.work;
         calendarId = userAccount['WORK_CALENDAR_ID'];
     } else {
         // looking at the personal account.
-        token = authority.personalToken;
+        token = tokenCache.work;
         calendarId = userAccount['PERSONAL_CALENDAR_ID'];
     }
 
