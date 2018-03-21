@@ -2,6 +2,7 @@ const restify = require('restify');
 const builder = require('botbuilder');
 const botbuilder_azure = require('botbuilder-azure');
 const conversationStateService = require('./bot/services/conversation-state-service');
+const tokenService = require('./bot/services/token-service');
 
 // Setup Restify Server
 const server = restify.createServer();
@@ -54,7 +55,10 @@ const mockUpData = {
 // Main dialog with LUIS
 const recognizer = new builder.LuisRecognizer(LuisModelUrl);
 const intents = new builder.IntentDialog({ recognizers: [recognizer] })
-    .matches('Meeting.Add', conversationStateService.handleMissingDataQuery)
+    .matches('Meeting.Add', [
+        tokenService.promptSignin,
+        conversationStateService.handleMissingDataQuery
+    ])
     .matches('Meeting.Subject', conversationStateService.handleMissingDataQuery)
     .matches('Meeting.Person', conversationStateService.handleMissingDataQuery)
     .matches(
@@ -66,9 +70,12 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         conversationStateService.handleMissingDataQuery
     )
     .matches('Meeting.Date', conversationStateService.handleMissingDataQuery)
-    .matches('Calendar.Availability', (session, args, next) => {
-        session.say('I found free times', mockUpData.freeTimes);
-    })
+    .matches('Calendar.Availability', [
+        tokenService.promptSignin,
+        (session, args, next) => {
+            session.say('I found free times', mockUpData.freeTimes);
+        }
+    ])
     .matches('Confirm.Positive', (session, args, next) => {
         const meetingState = conversationStateService.getMeetingState(
             session,
@@ -98,8 +105,14 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .matches('EndSkill', (session, args, next) => {
         session.endConversation();
     })
-    .onDefault((session, args, next) => {
-        session.send("Sorry, I did not understand '%s'.", session.message.text);
-    });
+    .onDefault([
+        tokenService.promptSignin,
+        (session, args, next) => {
+            session.send(
+                "Sorry, I did not understand '%s'.",
+                session.message.text
+            );
+        }
+    ]);
 
 bot.dialog('/', intents);
