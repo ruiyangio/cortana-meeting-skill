@@ -5,7 +5,34 @@ const LocalTime = joda.LocalTime;
 const TemporalAdjusters = joda.TemporalAdjusters;
 const DayOfWeek = joda.DayOfWeek;
 
-// Working hours
+function dateEntityToDate(dateEntity) {
+    // Only support today/tomorrow 3:00 pm for demo
+    const dateParts = dateEntity.split(' ');
+    let now = LocalDateTime.now();
+    let tomorrow = now.plusDays(1);
+
+    const scope = dateParts[0];
+    if (dateParts.length === 1) {
+        return scope === 'tomorrow'
+            ? new Date(tomorrow.toString())
+            : new Date(now.toString());
+    }
+
+    const offsets = dateParts[1].split(':');
+    const hour =
+        dateParts[2] === 'pm'
+            ? parseInt(offsets[0]) + 12
+            : parseInt(offsets[0]);
+    const minutes = parseInt(offsets[1]);
+
+    now = now.atTime(LocalTime.of(hour, minutes));
+    tomorrow = tomorrow.atTime(LocalTime.of(hour, minutes));
+
+    return scope === 'tomorrow'
+        ? new Date(tomorrow.toString())
+        : new Date(now.toString());
+}
+
 function dateEntityToDateQuery(dateEntity) {
     let res = { start: new Date(), end: new Date() };
     const now = LocalDateTime.now();
