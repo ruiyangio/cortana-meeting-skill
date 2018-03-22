@@ -17,13 +17,13 @@ const requiredFields = {
 };
 
 function getMeetingState(session, entities) {
-    if (!session.privateConversationData.meetingSate) {
-        session.privateConversationData.meetingSate = {};
+    if (!session.privateConversationData.meetingState) {
+        session.privateConversationData.meetingState = {};
     }
 
-    const meetingState = session.privateConversationData.meetingSate;
+    const meetingState = session.privateConversationData.meetingState;
     fillMeetingState(meetingState, entities);
-    session.privateConversationData.meetingSate = meetingState;
+    session.privateConversationData.meetingState = meetingState;
     return meetingState;
 }
 
@@ -73,7 +73,7 @@ function removeMeetingState(session) {
 }
 
 function askMissingData(session) {
-    const meetingState = session.privateConversationData.meetingSate;
+    const meetingState = session.privateConversationData.meetingState;
 
     if (!meetingState.subject) {
         session.say(
