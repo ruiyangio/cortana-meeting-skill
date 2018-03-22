@@ -1,10 +1,10 @@
 const entityTypeToFieldName = {
     person: 'person',
-    location: 'location',
+    'Calendar.Location': 'location',
     'builtin.datetimeV2.date': 'date',
     'builtin.datetimeV2.duration': 'duration',
     'builtin.datetimeV2.daterange': 'daterange',
-    'meeting.subject': 'subject'
+    'Calendar.Subject': 'subject'
 };
 
 const requiredFields = {
@@ -41,6 +41,25 @@ function fillMeetingState(meetingState, entities) {
     });
 }
 
+function getFreeTimeScope(entities) {
+    const freeTimeScope = {};
+    entities.forEach(entity => {
+        const dataFieldName = entityTypeToFieldName[entity.type];
+        if (!dataFieldName) {
+            return;
+        }
+
+        freeTimeScope[dataFieldName] =
+            freeTimeScope[dataFieldName] || entity.entity;
+    });
+
+    if (!freeTimeScope.date) {
+        freeTimeScope.date = 'today';
+    }
+
+    return freeTimeScope;
+}
+
 function isMeetingValid(meetingState) {
     return Object.keys(requiredFields).every(
         fieldName => !!meetingState[fieldName]
@@ -73,6 +92,11 @@ function askMissingData(session) {
         );
     } else if (!meetingState.person) {
         session.say('Who do you want to meet?', 'Who do you want to meet?');
+    } else if (!meetingState.type) {
+        session.say(
+            'Is this a work meeting or personal meeting?',
+            'Is this a work meeting or personal meeting?'
+        );
     } else {
         session.say(
             `Your meeting: ${JSON.stringify(meetingState)}`,
@@ -93,5 +117,6 @@ module.exports = {
     isMeetingValid: isMeetingValid,
     removeMeetingState: removeMeetingState,
     askMissingData: askMissingData,
-    handleMissingDataQuery: handleMissingDataQuery
+    handleMissingDataQuery: handleMissingDataQuery,
+    getFreeTimeScope: getFreeTimeScope
 };

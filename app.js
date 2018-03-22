@@ -68,10 +68,14 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         'Meeting.Location',
         conversationStateService.handleMissingDataQuery
     )
+    .matches('Meeting.Type', conversationStateService.handleMissingDataQuery)
     .matches('Meeting.Date', conversationStateService.handleMissingDataQuery)
     .matches('Calendar.Availability', [
         tokenService.promptSignin,
         (session, args, next) => {
+            const dateScope = conversationStateService.getFreeTimeScope(
+                args.entities
+            );
             session.send(
                 adaptiveCardService.createAvailableTimeMessage(session, {
                     start: 'Date',

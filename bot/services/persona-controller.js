@@ -9,14 +9,12 @@ const USER_ACCOUNTS = constants.USER_ACCOUNTS;
 
 /**
  * Gets the first avaiable time for an user based on the start date time provided.
- * @param {Object} user  the user logged in for cortana call. Use constant.USERS options.
+ * @param {String} user  the user logged in for cortana call. Use constant.USERS options.
+ * @param {Date} startDateTime  Represents the start date time.
  * @param {Date} startDateTime  Represents the start date time.
  * @returns a Promise which will contain the first avaialbe slot starting from the given start date time
  */
-function getPersonalAvailability(user, startDateTime) {
-    let endDateTime = new Date(startDateTime.getTime());
-    endDateTime.setDate(startDateTime.getDate() + 1);
-
+function getPersonalAvailability(user, startDateTime, endDateTime) {
     return _getPersonalAvailability(user, startDateTime, endDateTime);
 }
 
