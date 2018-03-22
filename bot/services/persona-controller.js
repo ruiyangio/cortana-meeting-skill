@@ -1,4 +1,5 @@
 const availableSlotService = require('./available-slot-service');
+const meetingSchedulerService = require('./meeting-scheduler-service');
 const constants = require('../constants');
 const tokenService = require('./token-service');
 const logger = require('../middlewares/request-logger-middleware');
@@ -320,8 +321,55 @@ function _findCommonAvailableSlot(availableSlots, durationInMins) {
     return null;
 }
 
-function scheduleMeeting(mailBox, attendees, location = '') {
-    // TODO : not implemented yet
+/**
+ * Creates a meeting.
+ * @param {object} mailBox shows if work account or personal account. Use constants.USER_MAILBOX options
+ * @param {string} user the organizer. Use one from the registered users in constants.USER
+ * @param {string[]]} attendees the attendees of the meeting. This is optional, use  entries from the registered users in constants.USER
+ * @param {Date} startDateTime start time of the meeting.
+ * @param {Date} endDateTime end time of the meeting.
+ * @param {string} subject subject of the meeting.
+ * @param {object} location location of the meeting. This is optional, use one from the predefined location-finder.js
+ * @param {string} meetingContent content of the meeting. This is optional.
+ */
+function scheduleMeeting(
+    mailBox,
+    user,
+    attendees,
+    startDateTime,
+    endDateTime,
+    subject,
+    location = '',
+    meetingContent = ''
+) {
+    let token = '';
+    let calendarId = '';
+    if (mailBox == constants.MAILBOX.WORK) {
+        token = tokenCache.work;
+        calendarId = USER_ACCOUNTS[user].WORK_CALENDAR_ID;
+    } else {
+        token = tokenCache.personal;
+        calendarId = USER_ACCOUNTS[user].PERSONAL_CALENDAR_ID;
+    }
+
+    return meetingSchedulerService
+        .scheduleMeeting({
+            token: token,
+            calendarId: calendarId,
+            attendees: attendees,
+            startDateTime: startDateTime,
+            endDateTime: endDateTime,
+            subject: subject,
+            mailBox: mailBox,
+            location: location,
+            meetingContent: meetingContent
+        })
+        .then(res => {
+            return res;
+        })
+        .catch(err => {
+            return err;
+        });
 }
 
 module.exports = {
