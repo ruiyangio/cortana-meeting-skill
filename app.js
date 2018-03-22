@@ -5,6 +5,7 @@ const botbuilder_azure = require('botbuilder-azure');
 const conversationStateService = require('./bot/services/conversation-state-service');
 const tokenService = require('./bot/services/token-service');
 const persona = require('./bot/services/persona-controller');
+const adaptiveCardService = require('./bot/services/adaptive-card-service');
 
 // Setup Restify Server
 const server = restify.createServer();
@@ -75,11 +76,12 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .matches('Calendar.Availability', [
         tokenService.promptSignin,
         (session, args, next) => {
-            persona
-                .getPersonalAvailability(constants.USERS.RUI, new Date())
-                .then(res => {
-                    session.send(JSON.stringify(res));
-                });
+            session.send(
+                adaptiveCardService.createAvailableTimeMessage({
+                    start: 'Date',
+                    end: 'Date'
+                })
+            );
         }
     ])
     .matches('Confirm.Positive', (session, args, next) => {
