@@ -52,7 +52,7 @@ function promptSignin(session, args, next) {
 
     validateToken()
         .then(tokenValid => {
-            next();
+            next(args);
         })
         .catch(error => {
             const signInMessage = new builder.Message(session).addAttachment(

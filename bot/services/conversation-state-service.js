@@ -48,7 +48,7 @@ function isMeetingValid(meetingState) {
 }
 
 function removeMeetingState(session) {
-    delete session.privateConversationData.meetingState;
+    session.privateConversationData.meetingState = {};
 }
 
 function askMissingData(session) {

@@ -93,9 +93,8 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         if (!conversationStateService.isMeetingValid(meetingState)) {
             session.say('How can I help you?', 'How can I help you?');
         } else {
-            session
-                .say('Meeting confirmed', 'Meeting is scheduled')
-                .endConversation('Meeting confirmed');
+            conversationStateService.removeMeetingState();
+            session.say('Meeting confirmed', 'Meeting is scheduled');
         }
     })
     .matches('Confirm.Negative', (session, args, next) => {
