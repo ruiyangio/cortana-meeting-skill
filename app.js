@@ -51,10 +51,6 @@ const luisAPIHostName =
 
 const LuisModelUrl = `https://${luisAPIHostName}/luis/v1/application?id=${luisAppId}&subscription-key=${luisAPIKey}`;
 
-const mockUpData = {
-    freeTimes: 'You have free times today from 3:00pm to 4:00pm'
-};
-
 // Main dialog with LUIS
 const recognizer = new builder.LuisRecognizer(LuisModelUrl);
 const intents = new builder.IntentDialog({ recognizers: [recognizer] })
@@ -93,7 +89,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         if (!conversationStateService.isMeetingValid(meetingState)) {
             session.say('How can I help you?', 'How can I help you?');
         } else {
-            conversationStateService.removeMeetingState();
+            conversationStateService.removeMeetingState(session);
             session.say('Meeting confirmed', 'Meeting is scheduled');
         }
     })
@@ -115,10 +111,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .onDefault([
         tokenService.promptSignin,
         (session, args, next) => {
-            session.send(
-                "Sorry, I did not understand '%s'.",
-                session.message.text
-            );
+            session.send(`Sorry, I did not understand ${session.message.text}`);
         }
     ]);
 
