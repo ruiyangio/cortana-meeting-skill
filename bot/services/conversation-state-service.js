@@ -3,7 +3,7 @@ const entityTypeToFieldName = {
     'Calendar.Location': 'location',
     'builtin.datetimeV2.date': 'date',
     'builtin.datetimeV2.duration': 'duration',
-    'builtin.datetimeV2.daterange': 'daterange',
+    'builtin.datetimeV2.daterange': 'date',
     'Calendar.Subject': 'subject',
     'meeting.type': 'type'
 };
@@ -12,7 +12,8 @@ const requiredFields = {
     person: true,
     location: true,
     date: true,
-    subject: true
+    subject: true,
+    type: true
 };
 
 function getMeetingState(session, entities) {
@@ -96,7 +97,7 @@ function askMissingData(session) {
     } else if (!meetingState.type) {
         session.say(
             'Is this a work meeting or personal meeting?',
-            'Is this a work meeting or personal meeting?'
+            'Work or personal?'
         );
     } else {
         session.say(
