@@ -1,6 +1,7 @@
 const availableSlotService = require('./available-slot-service');
 const constants = require('../constants');
 const tokenService = require('./token-service');
+const logger = require('../middlewares/request-logger-middleware');
 
 const tokenCache = tokenService.getTokens();
 const USERS = constants.USERS;
@@ -66,7 +67,7 @@ function getNextAvailableMeetingTime(
     endDateTime.setDate(startDateTime.getDate() + 1);
 
     if (mailBox == constants.MAILBOX.WORK) {
-        console.log('computing time for work event');
+        logger.log('computing time for work event');
 
         return _getAvailableTimeForWorkEvent(
             startDateTime,
@@ -75,7 +76,7 @@ function getNextAvailableMeetingTime(
             attendees
         );
     } else {
-        console.log('computing time for personal event');
+        logger.log('computing time for personal event');
 
         let attendeeCalAssciation = [];
         for (let i = 0; i < attendees.length; i++) {
@@ -116,9 +117,8 @@ function _getAvailableTimeForWorkEvent(
             return result;
         })
         .catch(function(error) {
-            // use the existing logger api
-            console.log(error['response']['status']);
-            console.log(error['response']['statusText']);
+            logger.log(error['response']['status']);
+            logger.log(error['response']['statusText']);
         });
 }
 
@@ -166,7 +166,7 @@ function _getAvailableTimeForPersonalEvent(
         calendarId = userAccount['WORK_CALENDAR_ID'];
     } else {
         // looking at the personal account.
-        token = tokenCache.work;
+        token = tokenCache.personal;
         calendarId = userAccount['PERSONAL_CALENDAR_ID'];
     }
 
@@ -201,8 +201,8 @@ function _getAvailableTimeForPersonalEvent(
         })
         .catch(function(error) {
             // use the existing logger api
-            console.log(error['response']['status']);
-            console.log(error['response']['statusText']);
+            logger.log(error['response']['status']);
+            logger.log(error['response']['statusText']);
         });
 }
 
@@ -258,7 +258,7 @@ function _getEventsFromCalanderView(response) {
 }
 
 function _findCommonAvailableSlot(availableSlots, durationInMins) {
-    console.log('this should be triggered only once');
+    logger.log('function to find common time should be triggered only once');
 
     let firstAttendeeLastIdx = availableSlots[0].length;
     let slotExhausted = false;

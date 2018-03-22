@@ -1,8 +1,7 @@
-module.exports = function requestMiddleWare(req, res, next) {
+function requestMiddleWare(req, res, next) {
     if (req.body) {
         console.log(req.body);
-    }
-    else {
+    } else {
         let requestData = '';
 
         req.on('data', chunk => {
@@ -12,9 +11,10 @@ module.exports = function requestMiddleWare(req, res, next) {
         req.on('end', () => {
             try {
                 console.log(JSON.parse(requestData));
-            }    
-            catch (err) {
-                console.log('Request Logger: receive - invalid request data received.');
+            } catch (err) {
+                console.log(
+                    'Request Logger: receive - invalid request data received.'
+                );
                 res.send(400);
                 res.end();
                 return;
@@ -23,3 +23,10 @@ module.exports = function requestMiddleWare(req, res, next) {
     }
     return next();
 }
+
+function log(value, title = '') {}
+
+module.exports = {
+    requestMiddleWare: requestMiddleWare,
+    log: log
+};
