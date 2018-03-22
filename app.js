@@ -77,7 +77,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         tokenService.promptSignin,
         (session, args, next) => {
             session.send(
-                adaptiveCardService.createAvailableTimeMessage({
+                adaptiveCardService.createAvailableTimeMessage(session, {
                     start: 'Date',
                     end: 'Date'
                 })
