@@ -27,7 +27,7 @@ const USER_ACCOUNTS = {
 const URLS = {
     FIND_MEETING_TIME:
         'https://outlook.office.com/api/v2.0/me/findmeetingtimes',
-    BASE_GET_CALENDAR_VIEW: 'https://outlook.office.com/api/v2.0/me/calendars/'
+    BASE_GET_CALENDAR_VIEW: 'https://graph.microsoft.com/v1.0/me/calendars/'
 };
 
 const MAILBOX = {

@@ -1,5 +1,7 @@
 const restClient = require('../util/rest-client.js');
 const constants = require('../constants.js');
+const logger = require('../middlewares/request-logger-middleware');
+
 const URLS = constants.URLS;
 const USER_ACCOUNTS = constants.USER_ACCOUNTS;
 const USERS = constants.USERS;
@@ -82,6 +84,9 @@ function getEvents(token, calendarId, startDateTime, endDateTime) {
         startDate +
         '&endDateTime=' +
         endDate;
+
+    logger.log(url, 'URL');
+    logger.log(token, 'TOKEN');
 
     return restClient.getCall(url, token);
 }
