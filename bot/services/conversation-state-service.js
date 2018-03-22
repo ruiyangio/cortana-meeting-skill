@@ -4,7 +4,8 @@ const entityTypeToFieldName = {
     'builtin.datetimeV2.date': 'date',
     'builtin.datetimeV2.duration': 'duration',
     'builtin.datetimeV2.daterange': 'daterange',
-    'Calendar.Subject': 'subject'
+    'Calendar.Subject': 'subject',
+    'meeting.type': 'type'
 };
 
 const requiredFields = {
