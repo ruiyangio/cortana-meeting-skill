@@ -1,4 +1,33 @@
 const cardService = require('./adaptive-card-service');
+const mockStartDates = [
+    {
+        start: new Date(
+            'Fri Mar 23 2018 15:00:00 GMT-0700 (Pacific Daylight Time)'
+        ),
+        end: new Date(
+            'Fri Mar 23 2018 19:00:00 GMT-0700 (Pacific Daylight Time)'
+        ),
+        display: 'Today 3:00 pm'
+    },
+    {
+        start: new Date(
+            'Fri Mar 23 2018 16:00:00 GMT-0700 (Pacific Daylight Time)'
+        ),
+        end: new Date(
+            'Fri Mar 23 2018 19:00:00 GMT-0700 (Pacific Daylight Time)'
+        ),
+        display: 'Today 4:00 pm'
+    },
+    {
+        start: new Date(
+            'Fri Mar 23 2018 16:30:00 GMT-0700 (Pacific Daylight Time)'
+        ),
+        end: new Date(
+            'Fri Mar 23 2018 19:00:00 GMT-0700 (Pacific Daylight Time)'
+        ),
+        display: 'Today 4:30 pm'
+    }
+];
 
 const entityTypeToFieldName = {
     person: 'person',
@@ -21,6 +50,9 @@ const requiredFields = {
 function getMeetingState(session, entities) {
     if (!session.privateConversationData.meetingState) {
         session.privateConversationData.meetingState = {};
+        session.privateConversationData.meetingState.mockStartDates = JSON.parse(
+            JSON.stringify(mockStartDates)
+        );
     }
 
     const meetingState = session.privateConversationData.meetingState;

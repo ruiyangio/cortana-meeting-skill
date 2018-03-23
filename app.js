@@ -73,14 +73,15 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .matches('Calendar.Availability', [
         tokenService.promptSignin,
         (session, args, next) => {
-            const dateScope = conversationStateService.getFreeTimeScope(
-                args.entities
-            );
+            // const dateScope = conversationStateService.getFreeTimeScope(
+            //     args.entities
+            // );
+            const meetingState = session.privateConversationData.meetingState;
             session.send(
-                adaptiveCardService.createAvailableTimeMessage(session, {
-                    start: 'Date',
-                    end: 'Date'
-                })
+                adaptiveCardService.createAvailableTimeMessage(
+                    session,
+                    meetingState.mockStartDates[0]
+                )
             );
         }
     ])

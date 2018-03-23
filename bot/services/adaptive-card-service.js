@@ -23,7 +23,7 @@ function createAvailableTimeMessage(session, timeSlot) {
     card.content.body[0].text = 'Your next available time:';
     card.content.body.push({
         type: 'TextBlock',
-        text: JSON.stringify(timeSlot)
+        text: timeSlot
     });
 
     return new builder.Message(session).addAttachment(card);
