@@ -21,7 +21,7 @@ function _copyTemplate() {
 function createAvailableTimeMessage(session, timeSlot) {
     const card = _copyTemplate();
     card.content.body[0].text = 'Your next available time:';
-    card.content.speak = `You have free time ${timeSlot}`;
+    card.content.body[0].speak = `You have free time ${timeSlot}`;
     card.content.body.push({
         type: 'TextBlock',
         text: timeSlot
@@ -33,9 +33,13 @@ function createAvailableTimeMessage(session, timeSlot) {
 function createCalendarCardMessage(session, meetingState) {
     const card = _copyTemplate();
     card.content.body[0].text = 'Your meeting details:';
-    card.content.speak = `<s>I found a free time for you to meet with ${
+    card.content.body[0].speak = `I found a free time for you to meet with ${
         meetingState.person
-    }</s><s>Do you want to schedule this meeting?</s>`;
+    }. Do you want to schedule this meeting?`;
+    card.content.body.push({
+        type: 'TextBlock',
+        text: meetingState.subject
+    });
     card.content.body.push({
         type: 'TextBlock',
         text: meetingState.location,
