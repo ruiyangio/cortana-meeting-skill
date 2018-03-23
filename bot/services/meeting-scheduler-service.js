@@ -1,6 +1,6 @@
 const constants = require('../constants');
 const restClient = require('../util/rest-client');
-const dateTimeUtils = require('../util/date-time-converter');
+const dateUtil = require('../util/date-util');
 const logger = require('../middlewares/request-logger-middleware');
 
 const USER_ACCOUNTS = constants.USER_ACCOUNTS;
@@ -13,11 +13,11 @@ function scheduleMeeting(args) {
             Content: args.meetingContent
         },
         Start: {
-            DateTime: dateTimeUtils.convertToODataFormat(args.startDateTime),
+            DateTime: dateUtil.convertToODataFormat(args.startDateTime),
             TimeZone: 'Pacific Standard Time'
         },
         End: {
-            DateTime: dateTimeUtils.convertToODataFormat(args.endDateTime),
+            DateTime: dateUtil.convertToODataFormat(args.endDateTime),
             TimeZone: 'Pacific Standard Time'
         },
         Attendees: [],

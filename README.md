@@ -1,5 +1,5 @@
 # cortana-meeting-skill
-Cortana skill using Exchange API
+Cortana meeting schedule skill demo
 
 ### Build and debug
 1. download source code zip and extract source in local folder

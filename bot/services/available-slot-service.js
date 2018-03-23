@@ -1,7 +1,7 @@
 const restClient = require('../util/rest-client.js');
 const constants = require('../constants.js');
 const logger = require('../middlewares/request-logger-middleware');
-const dateTimeUtils = require('../util/date-time-converter');
+const dateUtil = require('../util/date-util');
 
 const URLS = constants.URLS;
 const USER_ACCOUNTS = constants.USER_ACCOUNTS;
@@ -68,8 +68,8 @@ function findMeetingTimes(token, attendees, startDateTime, endDateTime) {
  * @returns a promise with the response of the API call.
  */
 function getEvents(token, calendarId, startDateTime, endDateTime) {
-    let startDate = dateTimeUtils.convertToODataFormat(startDateTime);
-    let endDate = dateTimeUtils.convertToODataFormat(endDateTime);
+    let startDate = dateUtil.convertToODataFormat(startDateTime);
+    let endDate = dateUtil.convertToODataFormat(endDateTime);
 
     let url =
         URLS.BASE_GET_CALENDAR_VIEW +

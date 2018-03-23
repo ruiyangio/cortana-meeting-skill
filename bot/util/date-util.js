@@ -61,6 +61,12 @@ function dateEntityToDateQuery(dateEntity) {
     return res;
 }
 
+function convertToODataFormat(date) {
+    return date.toISOString();
+}
+
 module.exports = {
-    dateEntityToDateQuery: dateEntityToDateQuery
+    dateEntityToDateQuery: dateEntityToDateQuery,
+    convertToODataFormat: convertToODataFormat,
+    dateEntityToDate: dateEntityToDate
 };

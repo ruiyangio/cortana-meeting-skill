@@ -93,8 +93,23 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         if (!conversationStateService.isMeetingValid(meetingState)) {
             session.say('How can I help you?', 'How can I help you?');
         } else {
-            conversationStateService.removeMeetingState(session);
-            session.say('Meeting confirmed', 'Meeting is scheduled');
+            const meetingState = session.privateConversationData.meetingState;
+            persona
+                .scheduleMeeting(
+                    meetingState.type,
+                    constants.USERS.rui,
+                    [constants.USERS[meetingState.person]],
+                    new Date(),
+                    new Date(),
+                    meetingState.subject
+                )
+                .then(res => {
+                    conversationStateService.removeMeetingState(session);
+                    session.say('Meeting confirmed', 'Meeting is scheduled');
+                })
+                .catch(error => {
+                    session.say('Meeting confirmed', 'Something is wrong');
+                });
         }
     })
     .matches('Confirm.Negative', (session, args, next) => {

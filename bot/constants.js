@@ -1,6 +1,6 @@
 const USERS = {
-    RUI: 'rui',
-    MIKE: 'mike'
+    rui: 'rui',
+    mike: 'mike'
 };
 
 const USER_ACCOUNTS = {

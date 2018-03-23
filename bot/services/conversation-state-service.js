@@ -1,3 +1,5 @@
+const cardService = require('./adaptive-card-service');
+
 const entityTypeToFieldName = {
     person: 'person',
     'Calendar.Location': 'location',
@@ -100,9 +102,8 @@ function askMissingData(session) {
             'Work or personal?'
         );
     } else {
-        session.say(
-            `Your meeting: ${JSON.stringify(meetingState)}`,
-            'Schedule this meeting?'
+        session.send(
+            cardService.createCalendarCardMessage(session, meetingState)
         );
     }
 }
