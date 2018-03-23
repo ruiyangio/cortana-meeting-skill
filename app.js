@@ -7,6 +7,8 @@ const tokenService = require('./bot/services/token-service');
 const persona = require('./bot/services/persona-controller');
 const adaptiveCardService = require('./bot/services/adaptive-card-service');
 const geoLocations = require('./bot/util/location-finder');
+const debug = require('./bot/middlewares/debug-logger');
+debug.debug();
 
 // Setup Restify Server
 const server = restify.createServer();
@@ -108,13 +110,14 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
                     'You have a previous meeting at Seattle. Do you want to set this meeting as Skype meeting instead?'
                 );
             } else {
+                console.log(meetingState.person);
                 persona
                     .scheduleMeeting(
                         meetingState.type,
                         constants.USERS.rui,
                         [constants.USERS[meetingState.person]],
-                        meetingState.mockStartDates[0].start,
-                        meetingState.mockStartDates[0].end,
+                        new Date(meetingState.mockStartDates[0].start),
+                        new Date(meetingState.mockStartDates[0].end),
                         meetingState.subject,
                         geoLocations[meetingState.location]
                     )
