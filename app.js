@@ -76,6 +76,11 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
             // const dateScope = conversationStateService.getFreeTimeScope(
             //     args.entities
             // );
+            if (!session.privateConversationData.meetingState) {
+                session.privateConversationData.meetingState = {};
+                session.privateConversationData.meetingState.mockStartDates =
+                    conversationStateService.mockStartDates;
+            }
             const meetingState = session.privateConversationData.meetingState;
             session.send(
                 adaptiveCardService.createAvailableTimeMessage(

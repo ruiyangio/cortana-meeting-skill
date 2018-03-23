@@ -21,6 +21,7 @@ function _copyTemplate() {
 function createAvailableTimeMessage(session, timeSlot) {
     const card = _copyTemplate();
     card.content.body[0].text = 'Your next available time:';
+    card.content.speak = `You have free time ${timeSlot}`;
     card.content.body.push({
         type: 'TextBlock',
         text: timeSlot

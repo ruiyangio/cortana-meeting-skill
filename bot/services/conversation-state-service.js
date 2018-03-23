@@ -153,5 +153,6 @@ module.exports = {
     removeMeetingState: removeMeetingState,
     askMissingData: askMissingData,
     handleMissingDataQuery: handleMissingDataQuery,
-    getFreeTimeScope: getFreeTimeScope
+    getFreeTimeScope: getFreeTimeScope,
+    mockStartDates: JSON.parse(JSON.stringify(mockStartDates))
 };
