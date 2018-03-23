@@ -5,7 +5,7 @@ const mockStartDates = [
             'Fri Mar 23 2018 15:00:00 GMT-0700 (Pacific Daylight Time)'
         ),
         end: new Date(
-            'Fri Mar 23 2018 19:00:00 GMT-0700 (Pacific Daylight Time)'
+            'Fri Mar 23 2018 16:00:00 GMT-0700 (Pacific Daylight Time)'
         ),
         display: 'Today 3:00 pm'
     },
@@ -14,7 +14,7 @@ const mockStartDates = [
             'Fri Mar 23 2018 16:00:00 GMT-0700 (Pacific Daylight Time)'
         ),
         end: new Date(
-            'Fri Mar 23 2018 19:00:00 GMT-0700 (Pacific Daylight Time)'
+            'Fri Mar 23 2018 17:00:00 GMT-0700 (Pacific Daylight Time)'
         ),
         display: 'Today 4:00 pm'
     },
@@ -23,7 +23,7 @@ const mockStartDates = [
             'Fri Mar 23 2018 16:30:00 GMT-0700 (Pacific Daylight Time)'
         ),
         end: new Date(
-            'Fri Mar 23 2018 19:00:00 GMT-0700 (Pacific Daylight Time)'
+            'Fri Mar 23 2018 17:30:00 GMT-0700 (Pacific Daylight Time)'
         ),
         display: 'Today 4:30 pm'
     }
@@ -103,7 +103,10 @@ function isMeetingValid(meetingState) {
 }
 
 function removeMeetingState(session) {
+    const mockStartDates =
+        session.privateConversationData.meetingState.mockStartDates;
     session.privateConversationData.meetingState = {};
+    session.privateConversationData.meetingState.mockStartDates = mockStartDates;
 }
 
 function askMissingData(session) {

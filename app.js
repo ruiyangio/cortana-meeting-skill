@@ -100,22 +100,34 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
             session.say('How can I help you?', 'How can I help you?');
         } else {
             const meetingState = session.privateConversationData.meetingState;
-            persona
-                .scheduleMeeting(
-                    meetingState.type,
-                    constants.USERS.rui,
-                    [constants.USERS[meetingState.person]],
-                    new Date(),
-                    new Date(),
-                    meetingState.subject
-                )
-                .then(res => {
-                    conversationStateService.removeMeetingState(session);
-                    session.say('Meeting confirmed', 'Meeting is scheduled');
-                })
-                .catch(error => {
-                    session.say('Meeting confirmed', 'Something is wrong');
-                });
+            // Mock up the conflict
+            if (meetingState.mockStartDates[0].display === 'Today 4:00 pm') {
+                session.say(
+                    'Location conflict',
+                    'You have a previous meeting at Seattle. Do you want to set this meeting as Skype meeting instead?'
+                );
+            } else {
+                persona
+                    .scheduleMeeting(
+                        meetingState.type,
+                        constants.USERS.rui,
+                        [constants.USERS[meetingState.person]],
+                        meetingState.mockStartDates[0].start,
+                        meetingState.mockStartDates[0].end,
+                        meetingState.subject
+                    )
+                    .then(res => {
+                        meetingState.mockStartDates.shift();
+                        conversationStateService.removeMeetingState(session);
+                        session.say(
+                            'Meeting confirmed',
+                            'Meeting is scheduled'
+                        );
+                    })
+                    .catch(error => {
+                        session.say('Meeting confirmed', 'Something is wrong');
+                    });
+            }
         }
     })
     .matches('Confirm.Negative', (session, args, next) => {
@@ -127,7 +139,14 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         if (!conversationStateService.isMeetingValid(meetingState)) {
             session.say('How can I help you?', 'How can I help you?');
         } else {
-            session.say('How can I help you?', 'How can I help you?');
+            const meetingState = session.privateConversationData.meetingState;
+            meetingState.mockStartDates.shift();
+            session.say(
+                'Do you want to schedule the meeting to another time?',
+                `Do you want to schedule the meeting at ${
+                    meetingState.mockStartDates[0].display
+                }?`
+            );
         }
     })
     .matches('EndSkill', (session, args, next) => {
