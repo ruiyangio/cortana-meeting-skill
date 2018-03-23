@@ -1,6 +1,9 @@
 const USERS = {
     rui: 'rui',
-    mike: 'mike'
+    mike: 'mike',
+    jojo: 'jojo',
+    'jo jo': 'jojo',
+    'joe joe': 'jojo'
 };
 
 const USER_ACCOUNTS = {
@@ -21,6 +24,15 @@ const USER_ACCOUNTS = {
         WORK_CALENDAR_ID:
             'AAMkAGUzYjIzNzQ0LTFkYjItNGQwYS04YTAwLWY3ODBmNmEzNjM4ZABGAAAAAABZIRb5Fjz8Q5pUBT9JEdXUBwDM9OHSIPZORZdmp5YbNEmcAAAAAAEGAADM9OHSIPZORZdmp5YbNEmcAAAAABemAAA=',
         NAME: 'Mike Smith'
+    },
+    jojo: {
+        WORK_EMAIL_ID: 'jojo.nandy@mengdongy.onmicrosoft.com',
+        PERSONAL_EMAIL_ID: 'jojo.personal2@hotmail.com',
+        PERSONAL_CALENDAR_ID:
+            'AQMkADAwATZiZmYAZC1mYzU2LWNkYmYtMDACLTAwCgBGAAADIfl3SCEWr0WfQt2akM3l1wcA69AARIqqcE_EIpTGcRXUUwAAAgEGAAAA69AARIqqcE_EIpTGcRXUUwAAAhELAAAA',
+        WORK_CALENDAR_ID:
+            'AAMkADk3ZDk2NDIwLWY5NWYtNDRmYy04MjRhLTM5YjQyMWQ2ZjhmOABGAAAAAAC9S74pTeVlSZ9RxAPlwazrBwClC50xm5pnQalU7FZB7fY9AAAAAAEGAAClC50xm5pnQalU7FZB7fY9AAAAj-oeAAA=',
+        NAME: 'Jojo Nandy'
     }
 };
 
