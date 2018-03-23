@@ -5,7 +5,6 @@ const LocalTime = joda.LocalTime;
 const TemporalAdjusters = joda.TemporalAdjusters;
 const DayOfWeek = joda.DayOfWeek;
 
-// Working hours
 function dateEntityToDateQuery(dateEntity) {
     let res = { start: new Date(), end: new Date() };
     const now = LocalDateTime.now();
@@ -34,6 +33,11 @@ function dateEntityToDateQuery(dateEntity) {
     return res;
 }
 
+function convertToODataFormat(date) {
+    return date.toISOString();
+}
+
 module.exports = {
-    dateEntityToDateQuery: dateEntityToDateQuery
+    dateEntityToDateQuery: dateEntityToDateQuery,
+    convertToODataFormat: convertToODataFormat
 };

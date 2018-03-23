@@ -29,6 +29,27 @@ function createAvailableTimeMessage(session, timeSlot) {
     return new builder.Message(session).addAttachment(card);
 }
 
+function createCalendarCardMessage(session, meetingState) {
+    const card = _copyTemplate();
+    card.content.body[0].text = 'Your meeting details:';
+    card.content.speak = `<s>I found a free time for you to meet with ${
+        meetingState.person
+    }</s><s>Do you want to schedule this meeting?</s>`;
+    card.content.body.push({
+        type: 'TextBlock',
+        text: meetingState.location,
+        isSubtle: true
+    });
+    card.content.body.push({
+        type: 'TextBlock',
+        text: meetingState.date,
+        isSubtle: true
+    });
+
+    return new builder.Message(session).addAttachment(card);
+}
+
 module.exports = {
-    createAvailableTimeMessage: createAvailableTimeMessage
+    createAvailableTimeMessage: createAvailableTimeMessage,
+    createCalendarCardMessage: createCalendarCardMessage
 };
