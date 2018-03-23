@@ -1,4 +1,4 @@
-let locations = {
+module.exports = {
     RED_ROBBINS: {
         DisplayName: 'Red Robin Gourmet Burgers',
         LocationUri:
@@ -62,12 +62,4 @@ let locations = {
             Longitude: -122.1224365234375
         }
     }
-};
-
-function getLocations() {
-    return locations;
-}
-
-module.exports = {
-    getLocations: getLocations
 };

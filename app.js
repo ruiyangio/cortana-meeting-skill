@@ -6,6 +6,7 @@ const conversationStateService = require('./bot/services/conversation-state-serv
 const tokenService = require('./bot/services/token-service');
 const persona = require('./bot/services/persona-controller');
 const adaptiveCardService = require('./bot/services/adaptive-card-service');
+const geoLocations = require('./bot/util/location-finder');
 
 // Setup Restify Server
 const server = restify.createServer();
@@ -114,7 +115,8 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
                         [constants.USERS[meetingState.person]],
                         meetingState.mockStartDates[0].start,
                         meetingState.mockStartDates[0].end,
-                        meetingState.subject
+                        meetingState.subject,
+                        geoLocations[meetingState.location]
                     )
                     .then(res => {
                         meetingState.mockStartDates.shift();
@@ -125,7 +127,10 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
                         );
                     })
                     .catch(error => {
-                        session.say('Meeting confirmed', 'Something is wrong');
+                        session.say(
+                            'Meeting confirmed',
+                            'Something is wrong when talking to Utah.'
+                        );
                     });
             }
         }
