@@ -85,7 +85,7 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
             session.send(
                 adaptiveCardService.createAvailableTimeMessage(
                     session,
-                    meetingState.mockStartDates[0]
+                    meetingState.mockStartDates[0].display
                 )
             );
         }
