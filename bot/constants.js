@@ -3,7 +3,9 @@ const USERS = {
     mike: 'mike',
     jojo: 'jojo',
     'jo jo': 'jojo',
-    'joe joe': 'jojo'
+    'joe joe': 'jojo',
+    joe: 'jojo',
+    jo: 'jojo'
 };
 
 const USER_ACCOUNTS = {
