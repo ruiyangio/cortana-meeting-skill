@@ -43,7 +43,7 @@ function createCalendarCardMessage(session, meetingState) {
     });
     card.content.body.push({
         type: 'TextBlock',
-        text: meetingState.date,
+        text: meetingState.mockStartDates[0].display,
         isSubtle: true
     });
 
